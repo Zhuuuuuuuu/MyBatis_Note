@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhuuu.dao.StudentMapper">
+    <!--需求：获取所有学生对应老师的信息
+        思路:
+            1.获取所有学生的信息
+            2.根据获取学生的信息的老师ID->获取该老师的信息
+            3.思考问题：这样学生的结果集中应该包含老师，数据库中一般使用关联查询
+            -->
+
+    <select id="getStudents" resultMap="StudentTeacher">
+        select * from student
+    </select>
+
+    <resultMap id="StudentTeacher" type="Student">
+<!--     association关联属性 property属性名 javaType 属性类型 column在多的一方表中的列名 -->
+        <association property="teacher" column="tid" javaType="Teacher" select="getTeacher"/>
+    </resultMap>
+
+    <select id="getTeacher" resultType="teacher">
+        select * from teacher where id = #{id}
+    </select>
+
+</mapper>
